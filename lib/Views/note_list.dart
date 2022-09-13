@@ -15,15 +15,15 @@ class NoteList extends StatefulWidget {
 
 class _NoteListState extends State<NoteList> {
   NotesService get service => GetIt.I<NotesService>();
-  List<NoteForListing> notes = [];
 
   String formatDateTime(DateTime dateTime) {
     return "${dateTime.day}/${dateTime.month}/${dateTime.year}";
   }
+  APIResponse<List<NoteForListing>> _apiResponse;
 
   @override
   void initState() {
-    notes = service.getNoteList();
+    // notes = service.getNoteList();
     super.initState();
   }
 
