@@ -78,6 +78,17 @@ class _NoteListState extends State<NoteList> {
                 onDismissed: (direction) {},
                 confirmDismiss: (derection) async {
                   final result = await showDialog(context: context, builder: (_) => NoteDelete());
+                  var message;
+                  if (result) {
+                    final deleteResult = await service.deleteNote(_apiResponse!.data[index].noteID);
+                    if (deleteResult != null && deleteResult.data == true) {
+                      message = "The note was deleted successfully";
+                    } else {
+                      message = deleteResult.errorMessage ?? "An error occured";
+                    }
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message), duration: Duration(seconds: 5)));
+                    return deleteResult.data ?? false;
+                  }
                   print(result);
                   return result;
                 },
@@ -101,13 +112,17 @@ class _NoteListState extends State<NoteList> {
                     "Last edited on ${formatDateTime(_apiResponse!.data[index].latestEditedDateTime ?? _apiResponse!.data[index].createDateTime)}",
                   ),
                   onTap: () {
-                    Navigator.of(context).push(
+                    Navigator.of(context)
+                        .push(
                       MaterialPageRoute(
                         builder: (_) => NoteModify(
                           noteID: _apiResponse!.data[index].noteID,
                         ),
                       ),
-                    );
+                    )
+                        .then((_) {
+                      _fetchNotes();
+                    });
                   },
                 ),
               );

@@ -37,7 +37,7 @@ class _NoteModifyState extends State<NoteModify> {
           _isLoading = false;
         });
         if (response.error) {
-          errorMessage = response.errorMessage ?? 'An error occurred';
+          errorMessage = response.errorMessage ?? 'An error occured';
         }
         note = response.data;
         _titleController.text = note!.noteTitle;
@@ -79,8 +79,6 @@ class _NoteModifyState extends State<NoteModify> {
                       onPressed: () async {
                         if (isEditing) {
                           // Update note in API
-                        } else {
-                          // Create Note in API
                           setState(() {
                             _isLoading = true;
                           });
@@ -88,12 +86,12 @@ class _NoteModifyState extends State<NoteModify> {
                             noteTitle: _titleController.text,
                             noteContent: _contentController.text,
                           );
-                          final result = await notesServcie.createNote(note);
+                          final result = await notesServcie.updateNote(widget.noteID, note);
                           setState(() {
                             _isLoading = false;
                           });
                           final String title = 'Done';
-                          final String content = result.error ? (result.errorMessage ?? "An error occurred") : "Your note was created";
+                          final String content = result.error ? (result.errorMessage ?? "An error occured") : "Your note was updated";
                           showDialog(
                               context: context,
                               builder: (_) {
@@ -114,7 +112,41 @@ class _NoteModifyState extends State<NoteModify> {
                               Navigator.pop(context);
                             }
                           });
-                          ;
+                        } else {
+                          // Create Note in API
+                          setState(() {
+                            _isLoading = true;
+                          });
+                          final note = NoteInsert(
+                            noteTitle: _titleController.text,
+                            noteContent: _contentController.text,
+                          );
+                          final result = await notesServcie.createNote(note);
+                          setState(() {
+                            _isLoading = false;
+                          });
+                          final String title = 'Done';
+                          final String content = result.error ? (result.errorMessage ?? "An error occured") : "Your note was created";
+                          showDialog(
+                              context: context,
+                              builder: (_) {
+                                return AlertDialog(
+                                  title: Text(title),
+                                  content: Text(content),
+                                  actions: [
+                                    TextButton(
+                                      child: Text("Ok"),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                );
+                              }).then((data) {
+                            if (result.data) {
+                              Navigator.pop(context);
+                            }
+                          });
                         }
                       },
                       child: Text(

@@ -47,4 +47,22 @@ class NotesService {
       return APIResponse<bool>(error: true, errorMessage: "An error occured");
     }).catchError((_) => APIResponse<bool>(error: true, errorMessage: "An error occured"));
   }
+
+  Future<APIResponse<bool>> updateNote(String noteID, NoteInsert item) {
+    return http.put(API + "/notes/" + noteID, headers: headers, body: json.encode(item.toJson())).then((data) {
+      if (data.statusCode == 204) {
+        return APIResponse<bool>(data: true);
+      }
+      return APIResponse<bool>(error: true, errorMessage: "An error occured");
+    }).catchError((_) => APIResponse<bool>(error: true, errorMessage: "An error occured"));
+  }
+
+  Future<APIResponse<bool>> deleteNote(String noteID) {
+    return http.delete(API + "/notes/" + noteID, headers: headers).then((data) {
+      if (data.statusCode == 204) {
+        return APIResponse<bool>(data: true);
+      }
+      return APIResponse<bool>(error: true, errorMessage: "An error occured");
+    }).catchError((_) => APIResponse<bool>(error: true, errorMessage: "An error occured"));
+  }
 }
