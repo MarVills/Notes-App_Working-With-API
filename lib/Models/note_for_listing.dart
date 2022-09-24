@@ -1,3 +1,8 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'note_for_listing.g.dart';
+
+@JsonSerializable()
 class NoteForListing {
   final noteID;
   final noteTitle;
@@ -11,12 +16,5 @@ class NoteForListing {
     this.latestEditedDateTime,
   });
 
-  factory NoteForListing.fromJson(Map<String, dynamic> item) {
-    return NoteForListing(
-      noteID: item["noteID"],
-      noteTitle: item["noteTitle"],
-      createDateTime: item["createDateTime"] != null ? DateTime.parse(item["createDateTime"]) : null,
-      latestEditedDateTime: item["latestEditedDateTime"] != null ? DateTime.parse(item["latestEditedDateTime"]) : null,
-    );
-  }
+  factory NoteForListing.fromJson(Map<String, dynamic> item) => _$NoteForListingFromJson(item);
 }
