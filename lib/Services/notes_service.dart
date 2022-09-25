@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:api_practice/Models/note.dart';
 import 'package:api_practice/Models/note_insert.dart';
-
 import '../Models/note_for_listing.dart';
 import '../Models/api_response.dart';
+
 import 'package:http/http.dart' as http;
 
 class NotesService {
